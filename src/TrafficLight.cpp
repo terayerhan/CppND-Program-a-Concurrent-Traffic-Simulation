@@ -15,8 +15,11 @@ T MessageQueue<T>::receive()
     _condition.wait(ulock, [this] {return !_queue.empty(); }); // pass unique lock to condition variable
 
     // remove first message from queue (FIFO)
-    T msg = std::move(_queue[0]);
-    _queue.erase(_queue.begin());
+    // T msg = std::move(_queue[0]);
+    // _queue.erase(_queue.begin());
+
+    T msg = std::move(_queue.back());
+    _queue.clear();
 
     return msg;
 }
