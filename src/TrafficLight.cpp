@@ -73,13 +73,13 @@ void TrafficLight::cycleThroughPhases()
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
 
     // init variables
-    int cycleDuration = 1; // duration of a single simulation cycle in ms
+    double cycleDuration = 5; // duration of a single simulation cycle in s
     std::chrono::time_point<std::chrono::steady_clock> lastUpdate;
-
     // Create a random device and seed the random number generator
     std::random_device rd;
     std::mt19937 gen(rd()); //Mersenne Twister random number generator
-    std::uniform_int_distribution<> dist(4, 6); // Random duration between 4 and 6 seconds
+    std::uniform_real_distribution<float> dist(4000.0, 6000.0); // Random duration between 4 and 6 seconds
+    
 
 
     // init stop watch
@@ -93,7 +93,7 @@ void TrafficLight::cycleThroughPhases()
         cycleDuration = dist(gen);
 
         // compute the time difference to stop watch
-        long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::seconds>(
+        long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::steady_clock::now() - lastUpdate
         ).count();
 
