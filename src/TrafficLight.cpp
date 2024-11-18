@@ -23,7 +23,7 @@ void MessageQueue<T>::send(T &&msg)
 
 /* Implementation of class "TrafficLight" */
 
-/* 
+ 
 TrafficLight::TrafficLight()
 {
     _currentPhase = TrafficLightPhase::red;
@@ -53,6 +53,48 @@ void TrafficLight::cycleThroughPhases()
     // and toggles the current phase of the traffic light between red and green and sends an update method 
     // to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. 
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
+
+    // init variables
+    int cycleDuration = 1; // duration of a single simulation cycle in ms
+    std::chrono::time_point<std::chrono::steady_clock> lastUpdate;
+
+    // Create a random device and seed the random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd()); //Mersenne Twister random number generator
+    std::uniform_int_distribution<> dist(4, 6); // Random duration between 4 and 6 seconds
+
+
+    // init stop watch
+    lastUpdate = std::chrono::steady_clock::now();
+    while (true)
+    {
+        // sleep at every iteration to reduce CPU usage
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        // Pick a random cycle duration
+        cycleDuration = dist(gen);
+
+        // compute the time difference to stop watch
+        long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::seconds>(
+            std::chrono::steady_clock::now() - lastUpdate
+        ).count();
+
+        if (timeSinceLastUpdate >= cycleDuration)
+        {
+            // toggle between red and green TrafficLightPhase
+            if(_currentPhase == TrafficLightPhase::red)
+            {
+                _currentPhase = TrafficLightPhase::green;
+            }
+            else 
+            {
+                _currentPhase = TrafficLightPhase::red;
+            }
+
+            // reset stop watch for next cycle
+            lastUpdate = std::chrono::steady_clock::now();
+        }
+    }
+    
 }
 
-*/
