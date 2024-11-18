@@ -94,6 +94,10 @@ void TrafficLight::cycleThroughPhases()
                 _currentPhase = TrafficLightPhase::red;
             }
 
+            // send update message to queue
+            TrafficLightPhase updateMsg = _currentPhase;
+            _trafficLightPhasesQueue.send(std::move(updateMsg));
+
             // reset stop watch for next cycle
             lastUpdate = std::chrono::steady_clock::now();
         }
